@@ -33,6 +33,21 @@ const Home: NextPage = () => {
     setFormState({ ...formState, [name]: value });
   };
 
+  const handleCheckBox = (e: FormEvent, item: string) => {
+    const { name, checked } = e.currentTarget as HTMLInputElement;
+    let data = formState?.[name]
+    if (data) {
+      if (checked) {
+        data += `${item}, `
+      } else {
+        data.replace(`${item}, `, "");
+      }
+    } else {
+      data = `${item}, `;
+    }
+    setFormState({ ...formState, [name]: data });
+  }
+
   useEffect(() => {
     const handleResize = () => {
       setCurrentHeight(window.innerHeight);
@@ -68,8 +83,8 @@ const Home: NextPage = () => {
     return await axios
       .post("/api/login", { user: code, questions: formState })
       .then((res) => {
-        window.location.href = "https://www.incubr.com/";
-        toast.success("Successfully registered");
+        toast.success("Thanks for submitting your response, we will get back to you within 24 hours");
+        // window.location.href = "https://www.incubr.com/";
       })
       .catch((err) => toast.error("Something went wrong"));
   };
@@ -165,10 +180,10 @@ const Home: NextPage = () => {
                     <label className="container font-[500] flex mt-3 items-center">
                       {item}
                       <input
-                        type="radio"
+                        type="checkbox"
                         name="prefer"
                         value={item}
-                        onChange={handleChange}
+                        onChange={(e) => handleCheckBox(e, item)}
                       />
                       <span className="checkmark" style={{ top: 0 }}></span>
                     </label>
@@ -197,7 +212,7 @@ const Home: NextPage = () => {
             />
           ))}
         </div>
-        <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
+        {/* <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
           <div className="flex flex-col items-center">
             <div className="text-3xl sm:text-4xl lg:text-5xl text-center uppercase">
               THANKS FOR PARTICIPATING,
@@ -205,7 +220,7 @@ const Home: NextPage = () => {
               <br /> IN 24 HOURS MAXIMUM
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
           {user ? (
             <button
