@@ -30,9 +30,7 @@ const Home: NextPage = () => {
 
   const handleChange = (e: FormEvent) => {
     const { name, value } = e.currentTarget as HTMLInputElement;
-    console.log(name);
     setFormState({ ...formState, [name]: value });
-    console.log(formState);
   };
 
   useEffect(() => {
