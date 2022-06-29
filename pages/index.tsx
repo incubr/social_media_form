@@ -89,7 +89,11 @@ const Home: NextPage = () => {
       .catch((err) => toast.error("Something went wrong"));
   };
 
-  const onFailure = () => {};
+  const onFailure = (err: any) => {
+    console.log(err);
+  }
+    
+  
 
   return (
     <div
@@ -126,12 +130,12 @@ const Home: NextPage = () => {
               </div>
               <div className=" cursor-pointer flex z-50">
                 <div className="px-1 text-4xl 2xl:text-6xl font-extralight ">
-                  <Link href={"https://www.instagram.com/incubr.tech/"}>
+                  <Link href={"https://www.instagram.com/incubr.tech"}>
                     <AiOutlineInstagram />
                   </Link>
                 </div>
                 <div className="px-1 text-4xl 2xl:text-6xl font-extralight ">
-                  <Link href={"https://www.linkedin.com/company/incubr/about/"}>
+                  <Link href={"https://www.linkedin.com/company/incubr/about"}>
                     <AiOutlineLinkedin />
                   </Link>
                 </div>
@@ -156,7 +160,7 @@ const Home: NextPage = () => {
               childern={
                 <div className="flex w-full py-2">
                   <textarea
-                    placeholder="Mention here."
+                    placeholder="Please share your details here"
                     rows={6}
                     className=" placeholder:text-white bg-transparent border border-white rounded-xl p-4 text-sm w-full"
                     value={formState?.[question.name]}
@@ -200,7 +204,7 @@ const Home: NextPage = () => {
               childern={
                 <div className="flex w-full py-2">
                   <textarea
-                    placeholder="Share the motivation of starting the company, its vision, mission and values in maximum of 250 words."
+                    placeholder="Please share your details here"
                     rows={6}
                     className=" placeholder:text-white bg-transparent border border-white rounded-xl p-4 text-sm w-full"
                     value={formState?.[question.name]}
@@ -212,15 +216,6 @@ const Home: NextPage = () => {
             />
           ))}
         </div>
-        {/* <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
-          <div className="flex flex-col items-center">
-            <div className="text-3xl sm:text-4xl lg:text-5xl text-center uppercase">
-              THANKS FOR PARTICIPATING,
-              <br /> WE TYPICALLY WILL REACH YOU
-              <br /> IN 24 HOURS MAXIMUM
-            </div>
-          </div>
-        </div> */}
         <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
           {user ? (
             <button

@@ -50,4 +50,5 @@ export const prefer_types = [
   "Infographics",
   "Videos",
   "Livestreams",
+  "Others"
 ];
