@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { FormEvent, useEffect, useState, useContext } from "react";
-import { GoogleLogin } from "react-google-login";
 import axios from "axios";
 import ElevatedBox from "../src/EvelatedBox";
 import Logo from "../assets/iNcubr.svg";
@@ -18,11 +17,8 @@ import {
   questions_top,
 } from "../src/questions";
 import { toast } from "react-toastify";
-
 import { Context } from "../context";
-import Head from "next/head";
-import Script from "next/script";
-
+import { useGoogleOneTapLogin } from "react-google-one-tap-login";
 
 interface FormState {
   [key: string]: string;
@@ -101,9 +97,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <Script src="https://accounts.google.com/gsi/client" defer></Script>
-      </Head>
       <div
         className="flex flex-col w-full justify-center items-center"
         style={{
@@ -241,7 +234,23 @@ const Home: NextPage = () => {
             ) : (
               <button
                 onClick={async () => {
-                  
+                  useGoogleOneTapLogin({
+                    onError: (error) => console.log(error),
+                    onSuccess: (response) => {
+                      let userOneTap = {
+                        profileObj: {
+                          email: response.email,
+                          givenName: response.given_name,
+                          familyName: response.family_name,
+                        },
+                      };
+                      setUser(userOneTap);
+                    },
+                    disableCancelOnUnmount: true,
+                    googleAccountConfigs: {
+                      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                    },
+                  });
                 }}
                 className=" text-2xl px-10 rounded-full flex items-center font-[TitleFont] tracking-widest font-bold space-x-4 bg-[#1F1D1D] p-5"
               >
