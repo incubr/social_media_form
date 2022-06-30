@@ -19,15 +19,15 @@ import {
 import { toast } from "react-toastify";
 import { Context } from "../context";
 import { useGoogleOneTapLogin } from "react-google-one-tap-login";
+import googleOneTap from "google-one-tap";
 
 interface FormState {
   [key: string]: string;
 }
 
-const Home: NextPage = () => {
+const Home: NextPage = (props: any) => {
   const [currentHeight, setCurrentHeight] = useState<number>(0);
   const [formState, setFormState] = useState<FormState>({});
-  const { user, setUser } = useContext(Context);
 
   const handleChange = (e: FormEvent) => {
     const { name, value } = e.currentTarget as HTMLInputElement;
@@ -62,8 +62,7 @@ const Home: NextPage = () => {
     };
   }, []);
 
-  const onSuccess = async (code: any) => {
-    setUser(code);
+  const onSuccess = async () => {
     const keys = Object.keys(formState);
     const question_keys = ["prefer"];
 
@@ -81,7 +80,7 @@ const Home: NextPage = () => {
     }
 
     return await axios
-      .post("/api/login", { user: code, questions: formState })
+      .post("/api/login", { user: props.user, questions: formState })
       .then((res) => {
         toast.success(
           "Thanks for submitting your response, we will get back to you within 24 hours"
@@ -223,9 +222,13 @@ const Home: NextPage = () => {
             ))}
           </div>
           <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
-            {user ? (
+            {props.user ? (
               <button
-                onClick={() => onSuccess(user)}
+                onClick={async () => {
+                  toast.promise(onSuccess(), {
+                    pending: "Submiting...",
+                  });
+                }}
                 className=" text-2xl px-10 rounded-full flex items-center font-[TitleFont] tracking-widest font-bold space-x-4 bg-[#1F1D1D] p-5"
               >
                 <AiOutlineGoogle size={35} />
@@ -233,29 +236,14 @@ const Home: NextPage = () => {
               </button>
             ) : (
               <button
+
                 onClick={async () => {
-                  useGoogleOneTapLogin({
-                    onError: (error) => console.log(error),
-                    onSuccess: (response) => {
-                      let userOneTap = {
-                        profileObj: {
-                          email: response.email,
-                          givenName: response.given_name,
-                          familyName: response.family_name,
-                        },
-                      };
-                      setUser(userOneTap);
-                    },
-                    disableCancelOnUnmount: true,
-                    googleAccountConfigs: {
-                      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-                    },
-                  });
+                  window.location.reload()
                 }}
                 className=" text-2xl px-10 rounded-full flex items-center font-[TitleFont] tracking-widest font-bold space-x-4 bg-[#1F1D1D] p-5"
               >
                 <AiOutlineGoogle size={35} />
-                <span className="mt-1">SUBMIT</span>
+                <span className="mt-1">Sign In with Google</span>
               </button>
             )}
           </div>
