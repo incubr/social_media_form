@@ -49,11 +49,11 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-const send_Email = async (user: any, questions: any) => {
+const send_Email = (user: any, questions: any) => {
   const message = create_Message(user, questions);
   const reciver_Email = user.profileObj.email;
 
-  let sent: any = await transporter.sendMail({
+  transporter.sendMail({
     from: `"Incubr Tech. Pvt." <${process.env.NEXT_PUBLIC_SENDER_EMAIL}>`,
     to: reciver_Email,
     subject: "Thank you for connecting with us.",
@@ -61,7 +61,7 @@ const send_Email = async (user: any, questions: any) => {
     priority: "high",
   });
 
-  let office = await transporter.sendMail({
+  transporter.sendMail({
     from: `"Incubr Tech. Pvt." <${process.env.NEXT_PUBLIC_SENDER_EMAIL}>`,
     to: process.env.NEXT_PUBLIC_OFFICE_RECIVERS?.split(","),
     subject: "Social media form inquiry Incubr Tech. Pvt.",
@@ -69,8 +69,6 @@ const send_Email = async (user: any, questions: any) => {
     html: message,
   });
 
-  console.log("Message sent: %s", sent.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(sent));
 };
 
 export const client = new google.auth.OAuth2(
