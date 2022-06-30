@@ -18,6 +18,7 @@ import {
   questions_top,
 } from "../src/questions";
 import { toast } from "react-toastify";
+import { useGoogleOneTapLogin } from "react-google-one-tap-login";
 
 interface FormState {
   [key: string]: string;
@@ -35,10 +36,10 @@ const Home: NextPage = () => {
 
   const handleCheckBox = (e: FormEvent, item: string) => {
     const { name, checked } = e.currentTarget as HTMLInputElement;
-    let data = formState?.[name]
+    let data = formState?.[name];
     if (data) {
       if (checked) {
-        data += `${item}, `
+        data += `${item}, `;
       } else {
         data.replace(`${item}, `, "");
       }
@@ -46,7 +47,7 @@ const Home: NextPage = () => {
       data = `${item}, `;
     }
     setFormState({ ...formState, [name]: data });
-  }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,7 +84,9 @@ const Home: NextPage = () => {
     return await axios
       .post("/api/login", { user: code, questions: formState })
       .then((res) => {
-        toast.success("Thanks for submitting your response, we will get back to you within 24 hours");
+        toast.success(
+          "Thanks for submitting your response, we will get back to you within 24 hours"
+        );
         // window.location.href = "https://www.incubr.com/";
       })
       .catch((err) => toast.error("Something went wrong"));
@@ -91,9 +94,28 @@ const Home: NextPage = () => {
 
   const onFailure = (err: any) => {
     console.log(err);
+  };
+
+  if (typeof window !== "undefined") {
+    useGoogleOneTapLogin({
+      onError: (error) => console.log(error),
+      onSuccess: (response) => {
+        console.log(response);
+        let userOneTap = {
+          profileObj: {
+            email: response.email,
+            givenName: response.given_name,
+            familyName: response.family_name,
+          },
+        };
+        setUser(userOneTap);
+      },
+      googleAccountConfigs: {
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      },
+      
+    });
   }
-    
-  
 
   return (
     <div
