@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { FormEvent, useEffect, useState, useContext } from "react";
+import React, { FormEvent, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import ElevatedBox from "../src/EvelatedBox";
 import Logo from "../assets/iNcubr.svg";
@@ -17,17 +17,17 @@ import {
   questions_top,
 } from "../src/questions";
 import { toast } from "react-toastify";
+import LoginWithGoogle from "../src/google";
 import { Context } from "../context";
-import { useGoogleOneTapLogin } from "react-google-one-tap-login";
-import googleOneTap from "google-one-tap";
 
 interface FormState {
   [key: string]: string;
 }
 
-const Home: NextPage = (props: any) => {
+const Home: NextPage = () => {
   const [currentHeight, setCurrentHeight] = useState<number>(0);
   const [formState, setFormState] = useState<FormState>({});
+  const { user } = React.useContext(Context);
 
   const handleChange = (e: FormEvent) => {
     const { name, value } = e.currentTarget as HTMLInputElement;
@@ -80,7 +80,7 @@ const Home: NextPage = (props: any) => {
     }
 
     return await axios
-      .post("/api/login", { user: props.user, questions: formState })
+      .post("/api/login", { user: user, questions: formState })
       .then((res) => {
         toast.success(
           "Thanks for submitting your response, we will get back to you within 24 hours"
@@ -96,13 +96,7 @@ const Home: NextPage = (props: any) => {
 
   return (
     <>
-      <div
-        className="flex flex-col w-full justify-center items-center"
-        style={{
-          background:
-            "linear-gradient(0.56deg, #294C58 7.62%, #367589 42.54%, rgba(127, 88, 123, 0.709206) 73.65%, rgba(53, 107, 125, 0.452223) 82.48%, rgba(255, 255, 255, 0) 94.09%)",
-        }}
-      >
+      <div className="flex flex-col w-full justify-center items-center">
         <div className="flex w-full flex-col">
           <div
             style={{ height: currentHeight }}
@@ -167,7 +161,7 @@ const Home: NextPage = (props: any) => {
                     <textarea
                       placeholder="Please share your details here"
                       rows={6}
-                      className=" placeholder:text-white bg-transparent border border-white rounded-xl p-4 text-sm w-full"
+                      className=" placeholder:text-black bg-transparent border border-black rounded-xl p-4 text-sm w-full"
                       value={formState?.[question.name]}
                       name={question.name}
                       onChange={handleChange}
@@ -211,7 +205,7 @@ const Home: NextPage = (props: any) => {
                     <textarea
                       placeholder="Please share your details here"
                       rows={6}
-                      className=" placeholder:text-white bg-transparent border border-white rounded-xl p-4 text-sm w-full"
+                      className=" placeholder:text-black bg-transparent border border-black rounded-xl p-4 text-sm w-full"
                       value={formState?.[question.name]}
                       onChange={handleChange}
                       name={question.name}
@@ -222,7 +216,7 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
           <div className="px-6 mb-8 sm:px-16 py-10 lg:px-24 xl:px-[10vw] h-full justify-around flex flex-col text-white items-center">
-            {props.user ? (
+            {user ? (
               <button
                 onClick={async () => {
                   toast.promise(onSuccess(), {
@@ -235,16 +229,7 @@ const Home: NextPage = (props: any) => {
                 <span className="mt-1">SUBMIT</span>
               </button>
             ) : (
-              <button
-
-                onClick={async () => {
-                  window.location.reload()
-                }}
-                className=" text-2xl px-10 rounded-full flex items-center font-[TitleFont] tracking-widest font-bold space-x-4 bg-[#1F1D1D] p-5"
-              >
-                <AiOutlineGoogle size={35} />
-                <span className="mt-1">Sign In with Google</span>
-              </button>
+              <LoginWithGoogle />
             )}
           </div>
         </div>

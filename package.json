@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.2.6",
     "axios": "^0.27.2",
     "gapi": "^0.0.3",
     "gapi-script": "^1.2.0",
