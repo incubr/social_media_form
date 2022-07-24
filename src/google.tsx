@@ -28,7 +28,6 @@ export default function LoginWithGoogle() {
       .catch((err) => {
         toast.error("Error in Google Sign In");
       });
-    console.log(data);
   };
 
   useGoogleOneTapLogin({

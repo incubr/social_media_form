@@ -90,10 +90,6 @@ const Home: NextPage = () => {
       .catch((err) => toast.error("Something went wrong"));
   };
 
-  const onFailure = (err: any) => {
-    console.log(err);
-  };
-
   return (
     <>
       <div className="flex flex-col w-full justify-center items-center">
